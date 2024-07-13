@@ -62,13 +62,19 @@ public class RedisCmd implements Runnable {
         if(jedis == null){
             System.out.println("redis 连接失败");
             return;
+        }else{
+            System.out.println("redis 连接成功");
         }
         if("out".equals(type)){
+            System.out.println("redis 开始导出");
             RedisUtils.outData(jedis, keys, output);
+            System.out.println("redis 导出完成");
             return;
         }
         if("in".equals(type)){
+            System.out.println("redis 开始导入");
             RedisUtils.inData(jedis, keys, input);
+            System.out.println("redis 导入完成");
             return;
         }
         System.out.println("参数错误");
