@@ -144,4 +144,30 @@ public class RedisUtils {
         }
         jedis.close();
     }
+
+
+    /**
+     * 导出并删除
+     * @param jedis
+     * @param keys
+     * @param output
+     */
+    public static void outAndDelData(Jedis jedis, String keys, String output) {
+        Set<String> set = jedis.keys(keys);
+        if(set==null || set.isEmpty()){
+            System.out.println("无数据");
+            return;
+        }
+        List<String> list = new ArrayList<String>();
+        for (String key : set) {
+            String type = jedis.type(key);
+            String line = handleData(jedis, type, key);
+            if(StrUtil.isNotBlank(line)){
+                list.add(line);
+            }
+            jedis.del(key);
+        }
+        FileUtil.writeLines(list, new File(output), "UTF-8");
+        jedis.close();
+    }
 }

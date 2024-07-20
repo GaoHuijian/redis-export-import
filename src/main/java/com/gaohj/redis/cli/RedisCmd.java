@@ -1,5 +1,6 @@
 package com.gaohj.redis.cli;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gaohj.redis.utils.RedisUtils;
@@ -47,6 +48,10 @@ public class RedisCmd implements Runnable {
             System.out.println("导出时 keys 不能为空");
             return;
         }
+        if(StrUtil.equals("del", type) && StrUtil.isBlank(keys)){
+            System.out.println("删除时 keys 不能为空");
+            return;
+        }
 
         //判断输入文件是否存在
         if("in".equals(type) && !new File(input).exists()){
@@ -76,6 +81,12 @@ public class RedisCmd implements Runnable {
             RedisUtils.inData(jedis, keys, input);
             System.out.println("redis 导入完成");
             return;
+        }
+        if("del".equals(type)){
+            System.out.println("redis 开始删除");
+            output = DateTime.now().toString("yyyyMMddHHmmss") + "dellog" + output;
+            RedisUtils.outAndDelData(jedis, keys, output);
+            System.out.println("redis 删除完成， 已删除数据已导出至" + output);
         }
         System.out.println("参数错误");
     }
