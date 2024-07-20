@@ -33,7 +33,7 @@ public class RedisCmd implements Runnable {
     @CommandLine.Option(names = {"-d", "--database"}, description = "redis database", defaultValue = "0")
     private int database;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "in导入 out导出",  defaultValue = "out")
+    @CommandLine.Option(names = {"-t", "--type"}, description = "in导入 out导出 del导出并删除",  defaultValue = "out")
     private String type;
 
     @CommandLine.Option(names = {"-o", "--output"}, description = "output file", defaultValue = "output.txt")
@@ -86,7 +86,8 @@ public class RedisCmd implements Runnable {
             System.out.println("redis 开始删除");
             output = DateTime.now().toString("yyyyMMddHHmmss") + "dellog" + output;
             RedisUtils.outAndDelData(jedis, keys, output);
-            System.out.println("redis 删除完成， 已删除数据已导出至" + output);
+            System.out.println("redis 删除完成，删除数据已导出至" + output);
+            return;
         }
         System.out.println("参数错误");
     }
